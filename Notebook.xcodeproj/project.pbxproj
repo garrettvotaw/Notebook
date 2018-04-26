@@ -8,13 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		A7395BD3209266A3002D24A2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395BD2209266A3002D24A2 /* AppDelegate.swift */; };
-		A7395BD5209266A3002D24A2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395BD4209266A3002D24A2 /* ViewController.swift */; };
 		A7395BD8209266A3002D24A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7395BD6209266A3002D24A2 /* Main.storyboard */; };
 		A7395BDB209266A3002D24A2 /* Notebook.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A7395BD9209266A3002D24A2 /* Notebook.xcdatamodeld */; };
 		A7395BDD209266A4002D24A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7395BDC209266A4002D24A2 /* Assets.xcassets */; };
 		A7395BE0209266A4002D24A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7395BDE209266A4002D24A2 /* LaunchScreen.storyboard */; };
 		A7395BEB209266A4002D24A2 /* NotebookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395BEA209266A4002D24A2 /* NotebookTests.swift */; };
 		A7395BF6209266A4002D24A2 /* NotebookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395BF5209266A4002D24A2 /* NotebookUITests.swift */; };
+		A7395C0420926868002D24A2 /* EntriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395C0320926868002D24A2 /* EntriesTableViewController.swift */; };
+		A7395C06209268D0002D24A2 /* EntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395C05209268D0002D24A2 /* EntryTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +38,6 @@
 /* Begin PBXFileReference section */
 		A7395BCF209266A3002D24A2 /* Notebook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notebook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7395BD2209266A3002D24A2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A7395BD4209266A3002D24A2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A7395BD7209266A3002D24A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A7395BDA209266A3002D24A2 /* Notebook.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Notebook.xcdatamodel; sourceTree = "<group>"; };
 		A7395BDC209266A4002D24A2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -49,6 +49,8 @@
 		A7395BF1209266A4002D24A2 /* NotebookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotebookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7395BF5209266A4002D24A2 /* NotebookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookUITests.swift; sourceTree = "<group>"; };
 		A7395BF7209266A4002D24A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A7395C0320926868002D24A2 /* EntriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntriesTableViewController.swift; sourceTree = "<group>"; };
+		A7395C05209268D0002D24A2 /* EntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +102,8 @@
 			isa = PBXGroup;
 			children = (
 				A7395BD2209266A3002D24A2 /* AppDelegate.swift */,
-				A7395BD4209266A3002D24A2 /* ViewController.swift */,
+				A7395C0320926868002D24A2 /* EntriesTableViewController.swift */,
+				A7395C05209268D0002D24A2 /* EntryTableViewCell.swift */,
 				A7395BD6209266A3002D24A2 /* Main.storyboard */,
 				A7395BDC209266A4002D24A2 /* Assets.xcassets */,
 				A7395BDE209266A4002D24A2 /* LaunchScreen.storyboard */,
@@ -259,7 +262,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7395BD5209266A3002D24A2 /* ViewController.swift in Sources */,
+				A7395C06209268D0002D24A2 /* EntryTableViewCell.swift in Sources */,
+				A7395C0420926868002D24A2 /* EntriesTableViewController.swift in Sources */,
 				A7395BDB209266A3002D24A2 /* Notebook.xcdatamodeld in Sources */,
 				A7395BD3209266A3002D24A2 /* AppDelegate.swift in Sources */,
 			);
