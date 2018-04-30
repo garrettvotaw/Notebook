@@ -16,6 +16,8 @@
 		A7395BF6209266A4002D24A2 /* NotebookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395BF5209266A4002D24A2 /* NotebookUITests.swift */; };
 		A7395C0420926868002D24A2 /* EntriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395C0320926868002D24A2 /* EntriesTableViewController.swift */; };
 		A7395C06209268D0002D24A2 /* EntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395C05209268D0002D24A2 /* EntryTableViewCell.swift */; };
+		A7395C082092734E002D24A2 /* EditEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395C072092734E002D24A2 /* EditEntryViewController.swift */; };
+		A7395C0A20927C06002D24A2 /* EntryTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7395C0920927C06002D24A2 /* EntryTableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,8 @@
 		A7395BF7209266A4002D24A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A7395C0320926868002D24A2 /* EntriesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntriesTableViewController.swift; sourceTree = "<group>"; };
 		A7395C05209268D0002D24A2 /* EntryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTableViewCell.swift; sourceTree = "<group>"; };
+		A7395C072092734E002D24A2 /* EditEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEntryViewController.swift; sourceTree = "<group>"; };
+		A7395C0920927C06002D24A2 /* EntryTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A73548362097C2D800B3A6F3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A7395C05209268D0002D24A2 /* EntryTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A73548372097C2F800B3A6F3 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A7395C0320926868002D24A2 /* EntriesTableViewController.swift */,
+				A7395C0920927C06002D24A2 /* EntryTableView.swift */,
+				A7395C072092734E002D24A2 /* EditEntryViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		A7395BC6209266A2002D24A2 = {
 			isa = PBXGroup;
 			children = (
@@ -102,8 +124,8 @@
 			isa = PBXGroup;
 			children = (
 				A7395BD2209266A3002D24A2 /* AppDelegate.swift */,
-				A7395C0320926868002D24A2 /* EntriesTableViewController.swift */,
-				A7395C05209268D0002D24A2 /* EntryTableViewCell.swift */,
+				A73548372097C2F800B3A6F3 /* Controllers */,
+				A73548362097C2D800B3A6F3 /* Views */,
 				A7395BD6209266A3002D24A2 /* Main.storyboard */,
 				A7395BDC209266A4002D24A2 /* Assets.xcassets */,
 				A7395BDE209266A4002D24A2 /* LaunchScreen.storyboard */,
@@ -263,8 +285,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7395C06209268D0002D24A2 /* EntryTableViewCell.swift in Sources */,
+				A7395C082092734E002D24A2 /* EditEntryViewController.swift in Sources */,
 				A7395C0420926868002D24A2 /* EntriesTableViewController.swift in Sources */,
 				A7395BDB209266A3002D24A2 /* Notebook.xcdatamodeld in Sources */,
+				A7395C0A20927C06002D24A2 /* EntryTableView.swift in Sources */,
 				A7395BD3209266A3002D24A2 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
