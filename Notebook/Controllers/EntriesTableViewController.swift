@@ -7,54 +7,121 @@
 //
 
 import UIKit
+import CoreData
 
 class EntriesTableViewController: UITableViewController {
-
+    
+    let context = CoreDataStack().managedObjectContext
+    var indexOfSelectedItem: IndexPath?
+    
+    lazy var fetchedResultsController : NSFetchedResultsController<Entry> = {
+        let request: NSFetchRequest<Entry> = Entry.fetchRequest()
+        let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        return controller
+        
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchedResultsController.delegate = self
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            print("There was an error fetching the Entries!")
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
+    
+    
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return fetchedResultsController.sections?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        guard let section = fetchedResultsController.sections?[section] else {return 0}
+        return section.numberOfObjects
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EntryCell", for: indexPath) as! EntryTableViewCell
-        cell.journalTextLabel.text = "solo victora et un natp ilt sip namin esh teuf iso jfie solo victora et un natp ilt sip namin esh teuf iso jfidsfadfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdklfjsadl;kfjadls;kfjas;lkdfjals;kdjfl;sakdjflaskdjflaskdfe"
-        cell.titleLabel.text = "First Entry"
-
+        return configureCell(cell, at: indexPath)
+    }
+    
+    private func configureCell(_ cell: EntryTableViewCell, at indexPath: IndexPath) -> EntryTableViewCell {
+        let entry = fetchedResultsController.object(at: indexPath)
+        cell.journalTextLabel.text = entry.text
+        cell.titleLabel.text = entry.title
+        guard let photoData = entry.photo else {return cell}
+        cell.journalImageView.image = UIImage(data: photoData)
         return cell
     }
-
     
-    // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
         if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+            
+            let entry = fetchedResultsController.object(at: indexPath)
+            context.delete(entry)
+            do {
+                try context.saveChanges()
+            } catch {
+                print("Error occured while deleting entry!")
+            }
+            
+        }
     }
-
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    
+    
     
     // MARK: - Navigation
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.indexOfSelectedItem = indexPath
+        performSegue(withIdentifier: "ShowDetail", sender: nil)
+    }
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        guard let nextVC = segue.destination as? EditEntryViewController else {return}
+        nextVC.context = self.context
+        
+        if segue.identifier == "ShowDetail" {
+            guard let indexPath = indexOfSelectedItem else {return}
+            let entry = fetchedResultsController.object(at: indexPath)
+            nextVC.entry = entry
+        } else if segue.identifier == "NewEntry" {
+            
+        }
+        
     }
 
 }
+
+
+extension EntriesTableViewController: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.reloadData()
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
