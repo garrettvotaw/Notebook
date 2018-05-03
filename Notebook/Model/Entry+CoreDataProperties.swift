@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 
 extension Entry {
@@ -27,7 +28,23 @@ extension Entry {
 
 }
 
-// MARK: Generated accessors for tags
+
 extension Entry {
+    @nonobjc class func with(title: String, text: String, photo: UIImage?, in context: NSManagedObjectContext) -> Entry {
+        let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: context) as! Entry
+        
+        entry.title = title
+        entry.text = text
+        entry.creationDate = Date()
+        if let photo = photo {
+            entry.photo = UIImageJPEGRepresentation(photo, 1.0)
+            return entry
+        }
+        return entry
+    }
     
+    var image: UIImage? {
+        guard let photoData = self.photo else {return nil}
+        return UIImage(data: photoData)
+    }
 }

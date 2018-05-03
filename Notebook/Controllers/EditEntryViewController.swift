@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
 class EditEntryViewController: UIViewController, UITextViewDelegate {
     
@@ -15,42 +16,52 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var creationDateLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
     
+    @IBOutlet weak var imageViewHeightContstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomConstraintForTextView: NSLayoutConstraint!
     
     var image: UIImage?
     var context: NSManagedObjectContext!
     var entry: Entry?
+    let locationManager = LocationManager()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        do {
+            try locationManager.requestAuthorization()
+        } catch {
+            
+        }
+        locationManager.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
         creationDateLabel.text = ""
-        guard let entry = entry else {return}
+        updateContstraints()
+        guard let entry = entry else {
+            locationManager.requestLocation()
+            return
+        }
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMMM d, yyyy — h:mma"
         let dateString = formatter.string(from: entry.creationDate)
         creationDateLabel.text = "Created: \(dateString)"
         titleTextField.text = entry.title
         textView.text = entry.text
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.scrollRangeToVisible(textView.selectedRange)
+        imageView.image = entry.image
+        updateContstraints()
     }
     
     @objc func keyboardWillShow(_ notification: Notification) {
         if let info = notification.userInfo, let keyboardFrame = info[UIKeyboardFrameEndUserInfoKey] as? NSValue {
             let frame = keyboardFrame.cgRectValue
-            bottomConstraintForTextView.constant = frame.size.height + 10
+            bottomConstraintForTextView.constant = frame.size.height
             
-            UIView.animate(withDuration: 0.8) {
+            UIView.animate(withDuration: 0.8) { [unowned self] in
                 self.view.layoutIfNeeded()
+                self.imageView.isHidden = true
+                self.imageViewHeightContstraint.constant = 0
             }
         }
     }
@@ -105,16 +116,25 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
         if let entry = entry {
             entry.title = title
             entry.text = text
+            guard let image = image else {return}
+            entry.photo = UIImageJPEGRepresentation(image, 1.0)
         } else {
-            let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: context) as! Entry
-            entry.title = title
-            entry.text = text
-            entry.creationDate = Date()
+            let _ = Entry.with(title: title, text: text, photo: image, in: context)
         }
         do {
             try context.saveChanges()
         } catch {
-            print("Error occured while attempting to save changes!")
+            Alert.presentAlert(with: self, title: "Changes Not Saved", text: "An error occured while trying to save changes.")
+        }
+    }
+    
+    func updateContstraints() {
+        if imageView.image == nil {
+            imageView.isHidden = true
+            imageViewHeightContstraint.constant = 0
+        } else if imageView.image != nil {
+            imageView.isHidden = false
+            imageViewHeightContstraint.constant = 150
         }
     }
     
@@ -126,6 +146,40 @@ extension EditEntryViewController: UIImagePickerControllerDelegate, UINavigation
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else { return }
         self.image = image
+        imageView.image = image
         picker.dismiss(animated: true, completion: nil)
+        updateContstraints()
     }
 }
+
+
+extension EditEntryViewController: LocationDelegate {
+    
+    
+    func obtainedLocation(_ coordinate: CLLocation) {
+        let decoder = CLGeocoder()
+        decoder.reverseGeocodeLocation(coordinate) { [unowned self] placemarks, error in
+            if let error = error as? CLError {
+                print(error)
+            } else if let placemark = placemarks?.first {
+                guard let city = placemark.locality, let state = placemark.administrativeArea, let address = placemark.name, let zip = placemark.postalCode else {return}
+                let formattedLocation = "\(address) \(city), \(state) \(zip)"
+                self.locationLabel.text = "Location: \(formattedLocation)"
+            }
+        }
+    }
+    
+    func failedWithError(_ error: LocationError) {
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
