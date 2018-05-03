@@ -118,27 +118,36 @@
                                 </constraints>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="a1G-0c-WiM">
-                                <rect key="frame" x="10" y="50" width="355" height="385"/>
+                                <rect key="frame" x="10" y="50" width="355" height="498"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OhH-8V-gmr">
                                 <rect key="frame" x="0.0" y="558" width="375" height="45"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location: 14025 N. Eastern Ave #421 Edmond, OK 73013" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KA2-FK-a6I">
-                                        <rect key="frame" x="15" y="15" width="345" height="16"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="rnz-J0-7pQ">
+                                        <rect key="frame" x="27.5" y="6" width="320.5" height="33"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Created on: Wednesday, May 2, 2018" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3w-aN-QhL">
+                                                <rect key="frame" x="55.5" y="0.0" width="210" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location: 14025 N. Eastern Ave #421 Edmond, OK 73013" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KA2-FK-a6I">
+                                                <rect key="frame" x="0.0" y="18.5" width="320.5" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.1647058824" green="0.47058823529999999" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstItem="KA2-FK-a6I" firstAttribute="centerY" secondItem="OhH-8V-gmr" secondAttribute="centerY" id="GTQ-Qv-Wvf"/>
-                                    <constraint firstItem="KA2-FK-a6I" firstAttribute="leading" secondItem="OhH-8V-gmr" secondAttribute="leading" constant="15" id="Sab-If-mIO"/>
-                                    <constraint firstAttribute="trailing" secondItem="KA2-FK-a6I" secondAttribute="trailing" constant="15" id="eOr-uJ-v9D"/>
+                                    <constraint firstItem="rnz-J0-7pQ" firstAttribute="centerX" secondItem="OhH-8V-gmr" secondAttribute="centerX" id="ZEG-ob-Okx"/>
+                                    <constraint firstItem="rnz-J0-7pQ" firstAttribute="centerY" secondItem="OhH-8V-gmr" secondAttribute="centerY" id="bRV-0f-JzI"/>
                                     <constraint firstAttribute="height" constant="45" id="xyc-RS-t2d"/>
                                 </constraints>
                             </view>
@@ -150,7 +159,7 @@
                             <constraint firstItem="Rch-sV-VZn" firstAttribute="top" secondItem="cOt-2F-GDs" secondAttribute="top" id="DsA-gK-CVf"/>
                             <constraint firstItem="cOt-2F-GDs" firstAttribute="trailing" secondItem="a1G-0c-WiM" secondAttribute="trailing" constant="10" id="EEq-JB-hCe"/>
                             <constraint firstItem="OhH-8V-gmr" firstAttribute="leading" secondItem="cOt-2F-GDs" secondAttribute="leading" id="L3G-HF-cHM"/>
-                            <constraint firstItem="cOt-2F-GDs" firstAttribute="bottom" secondItem="a1G-0c-WiM" secondAttribute="bottom" constant="168" id="UTw-Uw-6Ix"/>
+                            <constraint firstItem="OhH-8V-gmr" firstAttribute="top" secondItem="a1G-0c-WiM" secondAttribute="bottom" constant="10" id="UTw-Uw-6Ix"/>
                             <constraint firstItem="OhH-8V-gmr" firstAttribute="trailing" secondItem="cOt-2F-GDs" secondAttribute="trailing" id="aCy-f5-nbi"/>
                             <constraint firstItem="OhH-8V-gmr" firstAttribute="bottom" secondItem="cOt-2F-GDs" secondAttribute="bottom" id="nqq-lI-ZEF"/>
                             <constraint firstItem="a1G-0c-WiM" firstAttribute="leading" secondItem="cOt-2F-GDs" secondAttribute="leading" constant="10" id="vtx-vd-Egq"/>
@@ -179,6 +188,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="bottomConstraintForTextView" destination="UTw-Uw-6Ix" id="PQa-el-k4S"/>
+                        <outlet property="creationDateLabel" destination="d3w-aN-QhL" id="4HS-dK-IAS"/>
+                        <outlet property="locationLabel" destination="KA2-FK-a6I" id="3zR-Hm-VT9"/>
                         <outlet property="textView" destination="a1G-0c-WiM" id="ZBL-tL-Uxx"/>
                         <outlet property="titleTextField" destination="3Ql-GL-U95" id="Jof-F6-JPd"/>
                     </connections>

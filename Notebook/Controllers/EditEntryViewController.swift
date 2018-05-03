@@ -13,6 +13,11 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var creationDateLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+    
+    @IBOutlet weak var bottomConstraintForTextView: NSLayoutConstraint!
+    
     var image: UIImage?
     var context: NSManagedObjectContext!
     var entry: Entry?
@@ -20,14 +25,14 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
-        
-        titleTextField.text = entry?.title
-        textView.text = entry?.text
-    }
-    @IBOutlet weak var bottomConstraintForTextView: NSLayoutConstraint!
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        creationDateLabel.text = ""
+        guard let entry = entry else {return}
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMMM d, yyyy — h:mma"
+        let dateString = formatter.string(from: entry.creationDate)
+        creationDateLabel.text = "Created: \(dateString)"
+        titleTextField.text = entry.title
+        textView.text = entry.text
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,36 +65,57 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
         
         guard let title = titleTextField.text, !title.isEmpty,
               let text = textView.text else {return}
-        if let entry = entry {
-            entry.title = title
-            entry.text = text
-            entry.creationDate = Date() as NSDate
-        } else {
-            let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: context) as! Entry
-            entry.title = title
-            entry.text = text
-            entry.creationDate = Date() as NSDate
-        }
-
-        do {
-            try context.saveChanges()
-        } catch {
-            print("Error occured while attempting to save changes!")
-        }
+        saveEntry(entry, title: title, text: text)
         navigationController?.popToRootViewController(animated: true)
     }
     
     
     @IBAction func cancelPushed(_ sender: UIBarButtonItem) {
-        let alert = UIAlertController(title: "Delete Changes", message: "Would you like to delete all changes and go back?", preferredStyle: .actionSheet)
-        let destructiveAction = UIAlertAction(title: "Delete Changes", style: .destructive) { [unowned self] action in
-            self.navigationController?.popViewController(animated: true)
+        guard let entry = entry else {
+            if !titleTextField.text!.isEmpty || !textView.text.isEmpty{
+                let alert = UIAlertController(title: "Delete Entry", message: "Would you like to delete this entry and go back?", preferredStyle: .actionSheet)
+                let destructiveAction = UIAlertAction(title: "Delete Entry", style: .destructive) { [unowned self] action in
+                    self.navigationController?.popViewController(animated: true)
+                }
+                let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                alert.addAction(destructiveAction)
+                alert.addAction(cancel)
+                present(alert, animated: true, completion: nil)
+            } else {
+                navigationController?.popViewController(animated: true)
+            }
+            return
         }
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alert.addAction(destructiveAction)
-        alert.addAction(cancel)
-        present(alert, animated: true, completion: nil)
-        
+        if entry.title == titleTextField.text && entry.text == textView.text {
+            //no changes were made dismiss the view
+            navigationController?.popViewController(animated: true)
+        } else {
+            let alert = UIAlertController(title: "Delete Changes", message: "Would you like to delete all changes and go back?", preferredStyle: .actionSheet)
+            let destructiveAction = UIAlertAction(title: "Delete Changes", style: .destructive) { [unowned self] action in
+                self.navigationController?.popViewController(animated: true)
+            }
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            alert.addAction(destructiveAction)
+            alert.addAction(cancel)
+            present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func saveEntry(_ entry: Entry?, title: String, text: String) {
+        if let entry = entry {
+            entry.title = title
+            entry.text = text
+        } else {
+            let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: context) as! Entry
+            entry.title = title
+            entry.text = text
+            entry.creationDate = Date()
+        }
+        do {
+            try context.saveChanges()
+        } catch {
+            print("Error occured while attempting to save changes!")
+        }
     }
     
     

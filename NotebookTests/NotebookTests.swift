@@ -7,30 +7,52 @@
 //
 
 import XCTest
+import CoreData
 @testable import Notebook
 
 class NotebookTests: XCTestCase {
     
+    var persistentStore: NSPersistentStore!
+    var storeCoordinator: NSPersistentStoreCoordinator!
+    var managedObjectContext: NSManagedObjectContext!
+    var managedObjectModel: NSManagedObjectModel!
+
+    var fakeEntry: Entry?
+    
+    let editEntryController: EditEntryViewController = EditEntryViewController()
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        
+        managedObjectModel = NSManagedObjectModel.mergedModel(from: nil)
+        storeCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+        do {
+            try persistentStore = storeCoordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
+            managedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            managedObjectContext.persistentStoreCoordinator =  storeCoordinator
+        } catch {
+            print("Error occured Setting up Core Data")
+        }
+        
+        editEntryController.context = managedObjectContext
+        
+        editEntryController.saveEntry(nil, title: "Title", text: "Test Text")
+        let request: NSFetchRequest<Entry> = NSFetchRequest(entityName: "Entry")
+        fakeEntry = try! managedObjectContext.fetch(request).first!
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        persistentStore = nil
+        storeCoordinator = nil
+        managedObjectContext = nil
+        managedObjectModel = nil
+        fakeEntry = nil
+        
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testCreateEntry() {
+        XCTAssert(fakeEntry != nil, "Entry is nil")
     }
     
 }

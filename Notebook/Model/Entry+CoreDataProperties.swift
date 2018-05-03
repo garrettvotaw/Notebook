@@ -23,7 +23,7 @@ extension Entry {
     @NSManaged public var title: String
     @NSManaged public var text: String
     @NSManaged public var photo: Data?
-    @NSManaged public var creationDate: NSDate
+    @NSManaged public var creationDate: Date
 
 }
 
