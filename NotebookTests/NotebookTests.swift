@@ -19,7 +19,6 @@ class NotebookTests: XCTestCase {
 
     var fakeEntry: Entry?
     
-    let editEntryController: EditEntryViewController = EditEntryViewController()
     
     override func setUp() {
         super.setUp()
@@ -34,11 +33,8 @@ class NotebookTests: XCTestCase {
             print("Error occured Setting up Core Data")
         }
         
-        editEntryController.context = managedObjectContext
         
-        editEntryController.saveEntry(nil, title: "Title", text: "Test Text")
-        let request: NSFetchRequest<Entry> = NSFetchRequest(entityName: "Entry")
-        fakeEntry = try! managedObjectContext.fetch(request).first!
+        
     }
     
     override func tearDown() {
@@ -52,7 +48,54 @@ class NotebookTests: XCTestCase {
     }
     
     func testCreateEntry() {
-        XCTAssert(fakeEntry != nil, "Entry is nil")
+        fakeEntry = Entry.with(title: "Test", text: "Test", photo: nil, location: nil, in: managedObjectContext)
+        XCTAssert(fakeEntry != nil)
     }
+    
+    func testDeleteEntry() {
+        guard let fakeEntry = fakeEntry else {return}
+        let id = fakeEntry.objectID
+        managedObjectContext.delete(fakeEntry)
+        do {
+            try managedObjectContext.saveChanges()
+        } catch {
+            print("changes not saved")
+        }
+        
+        let entry: NSManagedObject? = managedObjectContext.object(with: id)
+        XCTAssert(entry == nil)
+    }
+    
+    func testEditEntry() {
+        fakeEntry = Entry.with(title: "Edited", text: "Edit Test", photo: nil, location: nil, in: managedObjectContext)
+        do {
+            try managedObjectContext.saveChanges()
+        } catch {
+            print(error)
+        }
+        
+        fakeEntry?.title = "edit"
+        
+        do {
+            try managedObjectContext.saveChanges()
+        } catch {
+            print(error)
+        }
+        
+        XCTAssert(fakeEntry?.title == "edit")
+    }
+    
+    
+    func testDateAttachedToEntry() {
+        fakeEntry = Entry.with(title: "Test", text: "Date Test", photo: nil, location: nil, in: managedObjectContext)
+        do {
+            try managedObjectContext.saveChanges()
+        } catch {
+            print(error)
+        }
+        
+        XCTAssert(fakeEntry?.creationDate != nil)
+    }
+    
     
 }
