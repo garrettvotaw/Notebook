@@ -13,6 +13,7 @@ class EntriesTableViewController: UITableViewController {
     
     let context = CoreDataStack().managedObjectContext
     var indexOfSelectedItem: IndexPath?
+    let searchController = UISearchController(searchResultsController: nil)
     
     lazy var fetchedResultsController : NSFetchedResultsController<Entry> = {
         let request: NSFetchRequest<Entry> = Entry.fetchRequest()
@@ -22,6 +23,11 @@ class EntriesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchController.searchBar.delegate = self
+        tableView.tableHeaderView = searchController.searchBar
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchResultsUpdater = self
         fetchedResultsController.delegate = self
         do {
             try fetchedResultsController.performFetch()
@@ -82,13 +88,13 @@ class EntriesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.indexOfSelectedItem = indexPath
         performSegue(withIdentifier: "ShowDetail", sender: nil)
+        searchController.dismiss(animated: true, completion: nil)
     }
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let nextVC = segue.destination as? EditEntryViewController else {return}
         nextVC.context = self.context
-        
         if segue.identifier == "ShowDetail" {
             guard let indexPath = indexOfSelectedItem else {return}
             let entry = fetchedResultsController.object(at: indexPath)
@@ -127,8 +133,41 @@ extension EntriesTableViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-
-
+extension EntriesTableViewController: UISearchResultsUpdating, UISearchBarDelegate {
+    func updateSearchResults(for searchController: UISearchController) {
+        let text = searchController.searchBar.text!
+        
+        if !text.isEmpty {
+            fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "text contains[cd] %@", text)
+        } else {
+            fetchedResultsController.fetchRequest.predicate = nil
+            do {
+                try fetchedResultsController.performFetch()
+            } catch {
+                Alert.presentAlert(with: self, title: "Error Fetching", text: "We were unable to retrieve your entries.", type: .alert)
+            }
+            tableView.reloadData()
+        }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        do {
+            try fetchedResultsController.performFetch()
+            tableView.reloadData()
+        } catch {
+            Alert.presentAlert(with: self, title: "Error Fetching", text: "We were unable to retrieve your entries.", type: .alert)
+        }
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        do {
+            try fetchedResultsController.performFetch()
+            tableView.reloadData()
+        } catch {
+            Alert.presentAlert(with: self, title: "Error Fetching", text: "We were unable to retrieve your entries.", type: .alert)
+        }
+    }
+}
 
 
 
