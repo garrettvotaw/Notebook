@@ -34,7 +34,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func requestAuthorization() throws {
         let status = CLLocationManager.authorizationStatus()
         switch status {
-            case .denied, .restricted: throw LocationError.disallowedByUser
+        case .denied, .restricted: throw LocationError.disallowedByUser
             case .notDetermined: manager.requestWhenInUseAuthorization()
         default: return
         }
@@ -49,7 +49,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         
         switch error.code {
         case .network: delegate?.failedWithError(.networkFailure)
-        case .denied: delegate?.failedWithError(.disallowedByUser)
+        case .denied: delegate?.failedWithError(.disallowedByUser); manager.stopUpdatingLocation()
         case .locationUnknown: delegate?.failedWithError(.locationUnavailable)
         default: return
         }

@@ -25,17 +25,19 @@ extension Entry {
     @NSManaged public var text: String
     @NSManaged public var photo: Data?
     @NSManaged public var creationDate: Date
+    @NSManaged public var location: String?
 
 }
 
 
 extension Entry {
-    @nonobjc class func with(title: String, text: String, photo: UIImage?, in context: NSManagedObjectContext) -> Entry {
+    @nonobjc class func with(title: String, text: String, photo: UIImage?, location: String?, in context: NSManagedObjectContext) -> Entry {
         let entry = NSEntityDescription.insertNewObject(forEntityName: "Entry", into: context) as! Entry
         
         entry.title = title
         entry.text = text
         entry.creationDate = Date()
+        entry.location = location
         if let photo = photo {
             entry.photo = UIImageJPEGRepresentation(photo, 1.0)
             return entry

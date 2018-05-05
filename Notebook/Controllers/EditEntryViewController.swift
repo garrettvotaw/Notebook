@@ -21,6 +21,7 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var imageViewHeightContstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomConstraintForTextView: NSLayoutConstraint!
     
+    var location: String?
     var image: UIImage?
     var context: NSManagedObjectContext!
     var entry: Entry?
@@ -50,6 +51,7 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
         titleTextField.text = entry.title
         textView.text = entry.text
         imageView.image = entry.image
+        locationLabel.text = entry.location
         updateContstraints()
     }
     
@@ -73,7 +75,10 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func donePushed(_ sender: UIBarButtonItem) {
-        
+        if entry?.title == titleTextField.text && entry?.text == textView.text && entry?.image == image {
+            //no changes were made dismiss the view
+            navigationController?.popViewController(animated: true)
+        }
         guard let title = titleTextField.text, !title.isEmpty,
               let text = textView.text else {return}
         saveEntry(entry, title: title, text: text)
@@ -119,12 +124,12 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
             guard let image = image else {return}
             entry.photo = UIImageJPEGRepresentation(image, 1.0)
         } else {
-            let _ = Entry.with(title: title, text: text, photo: image, in: context)
+            let _ = Entry.with(title: title, text: text, photo: image, location: location, in: context)
         }
         do {
             try context.saveChanges()
         } catch {
-            Alert.presentAlert(with: self, title: "Changes Not Saved", text: "An error occured while trying to save changes.")
+            Alert.presentAlert(with: self, title: "Changes Not Saved", text: "An error occured while trying to save changes.", type: .alert)
         }
     }
     
@@ -132,9 +137,9 @@ class EditEntryViewController: UIViewController, UITextViewDelegate {
         if imageView.image == nil {
             imageView.isHidden = true
             imageViewHeightContstraint.constant = 0
-        } else if imageView.image != nil {
+        } else if let _ = imageView.image {
             imageView.isHidden = false
-            imageViewHeightContstraint.constant = 150
+            imageViewHeightContstraint.constant = 160
         }
     }
     
@@ -160,17 +165,26 @@ extension EditEntryViewController: LocationDelegate {
         let decoder = CLGeocoder()
         decoder.reverseGeocodeLocation(coordinate) { [unowned self] placemarks, error in
             if let error = error as? CLError {
+                switch error.code {
+                case .network, .locationUnknown: Alert.presentAlert(with: self, title: "Error Obtaining Location", text: "We were unable to determine your location for this entry", type: .actionSheet)
+                default: return
+                }
                 print(error)
             } else if let placemark = placemarks?.first {
                 guard let city = placemark.locality, let state = placemark.administrativeArea, let address = placemark.name, let zip = placemark.postalCode else {return}
                 let formattedLocation = "\(address) \(city), \(state) \(zip)"
+                self.location = formattedLocation
                 self.locationLabel.text = "Location: \(formattedLocation)"
             }
         }
     }
     
     func failedWithError(_ error: LocationError) {
-        
+        switch error {
+        case .disallowedByUser: locationLabel.text = "Location Disallowed by User"
+        case .locationUnavailable: Alert.presentAlert(with: self, title: "Error Obtaining Location", text: "We were unable to determine your location for this entry", type: .actionSheet)
+        case .networkFailure: Alert.presentAlert(with: self, title: "Location Not Found", text: "We were unable to find your location due to poor connection", type: .actionSheet)
+        }
     }
 }
 

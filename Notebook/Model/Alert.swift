@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class Alert {
-    static func presentAlert(with controller: UIViewController, title: String, text: String) {
-        let alert = UIAlertController(title: title, message: text, preferredStyle: .alert)
+    static func presentAlert(with controller: UIViewController, title: String, text: String, type: UIAlertControllerStyle) {
+        let alert = UIAlertController(title: title, message: text, preferredStyle: type)
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
         alert.addAction(action)
         controller.present(alert, animated: true, completion: nil)
